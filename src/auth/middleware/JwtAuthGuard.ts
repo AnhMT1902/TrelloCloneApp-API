@@ -15,10 +15,13 @@ export class JwtAuthGuard extends AuthGuard("jwt") {
       return false;
     }
     const token = bearerToken.split(" ")[1];
+    console.log(token);
     try {
-      request.user = this.jwtService.verify(token)
+      console.log(this.jwtService.verify(token),1);
+      request.user = await this.jwtService.verify(token);
       return true;
     } catch (err) {
+      console.log(err);
       return false;
     }
   }

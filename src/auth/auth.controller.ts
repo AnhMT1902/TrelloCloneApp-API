@@ -1,26 +1,25 @@
-import { Body, Controller, Post, Req, Res, UseGuards } from "@nestjs/common";
+import { Body, Controller, Post, Req, Res } from "@nestjs/common";
 import { Request, Response } from "express";
 import { AuthService } from "./auth.service";
-import { CreateUserDto } from "./Dto/createUserDto";
-import { JwtAuthGuard } from "./middleware/JwtAuthGuard";
+import { CreateUserDto } from "./Dto/user.Dto";
 
 @Controller("auth")
 export class AuthController {
   constructor(private readonly authService: AuthService) {
   }
 
-  @Post("signup")
-  async register(@Body() userDto: CreateUserDto, @Res() res: Response): Promise<any> {
+  @Post("register")
+  async register(
+    @Body() userDto: CreateUserDto,
+    @Res() res: Response,
+    @Req() req): Promise<any> {
     try {
-      await this.authService.register(userDto);
-      return res.status(200).json({
-        message: "register success",
-        checked: true
-      });
-    } catch (e) {
-      return res.status(401).json({
-        error: e.message
-      });
+      let accessToken = await this.authService.register(userDto);
+      return res.status(200).json(accessToken);
+    } catch (error) {
+      return res.status(400).json(
+        error
+      );
     }
   }
 
@@ -28,12 +27,11 @@ export class AuthController {
   async login(@Req() req: Request, @Res() res: Response): Promise<any> {
     try {
       const accessToken = await this.authService.checkLogin(req.body);
-      console.log(accessToken);
       return res.status(200).json(accessToken);
-    } catch (e) {
-      return res.status(401).json({
-        error: e.message
-      });
+    } catch (error) {
+      return res.status(400).json(
+        error
+      );
     }
   }
 }

@@ -2,9 +2,10 @@ import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { User } from "./schema/user.schema";
 import { Model } from "mongoose";
-import { CreateUserDto } from "./Dto/createUserDto";
+import { CreateUserDto } from "./Dto/user.Dto";
 import { JwtService } from "@nestjs/jwt";
 import * as bcrypt from "bcrypt";
+import { check } from "prettier";
 
 
 @Injectable()
@@ -16,37 +17,41 @@ export class AuthService {
   ) {
   }
 
-  async register(userDto: CreateUserDto): Promise<User> {
+  async register(userDto: CreateUserDto): Promise<any> {
     const user = new User();
     user.email = userDto.email;
+    user.name = userDto.name;
     user.password = await this.hashPassword(userDto.password, 10);
-    if (await this.checkEmail(user.email)) {
-      throw new UnauthorizedException("Invalid username");
+    if (await this.findUserByEmail(user.email)) {
+      throw new UnauthorizedException("Invalid email");
     }
-    return this.userModel.create(user);
+    await this.userModel.create(user);
+    const userRegister: User = await this.userModel.findOne({ email: user.email });
+    userRegister.password = userDto.password;
+    return await this.checkLogin(userRegister);
   };
 
   private async hashPassword(password: string, salt: number): Promise<string> {
     return bcrypt.hash(password, salt);
   }
 
-  async checkEmail(email: string): Promise<any> {
-    const user = await this.userModel.findOne({ email: email });
-    return !!user;
+  async findUserByEmail(email: string): Promise<any> {
+    return this.userModel.findOne({ email: email });
   };
 
   async checkLogin(userLogin: CreateUserDto): Promise<any> {
-    const user = await this.userModel.findOne({ email: userLogin.email });
-    console.log(user);
+    const user = await this.findUserByEmail(userLogin.email);
     if (!user) {
       throw new UnauthorizedException("Incorrect email or password");
     }
+
     const is_equal = await bcrypt.compare(userLogin.password, user.password);
-    console.log(is_equal);
+
     if (!is_equal) {
       throw new UnauthorizedException("Incorrect email or password");
     }
-    const payload = { email: user.email, sub: user.password };
+
+    const payload = { email: user.email, sub: user.password, name: user.name, _id: user._id.toString() };
     return {
       accessToken: this.JwtService.sign(payload)
     };
