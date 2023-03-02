@@ -12,7 +12,8 @@ import { JwtAuthGuard } from "./middleware/JwtAuthGuard";
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
     JwtModule.register({
       secret: jwtConstants.secret,
-      signOptions: { expiresIn: "60000s" }
+      signOptions: { expiresIn: "60000s" },
+      verifyOptions: { algorithms: ["HS256"] }
     })
   ],
   controllers: [AuthController],

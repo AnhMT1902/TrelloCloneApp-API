@@ -16,8 +16,8 @@ export class BroadService {
     return await this.BroadModel.create(broad);
   }
 
-  async addMember(idBroad: string, emailMember): Promise<Broad> {
-    let memberFind
+  async addMember(idBroad: string, user): Promise<Broad> {
+    // console.log(memberFind);
     return;
   }
 }
