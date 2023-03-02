@@ -13,7 +13,7 @@ export class Card {
   index_list: number;
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: "Card" })
-  List_id: List;
+  lists: List;
 }
 
 export const CardSchema = SchemaFactory.createForClass(Card);

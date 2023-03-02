@@ -2,7 +2,7 @@ import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { User } from "./schema/user.schema";
 import { Model } from "mongoose";
-import { CreateUserDto, findUserDto, LoginUserDto } from "./Dto/user.Dto";
+import { CreateUserDto, FindUserDto, LoginUserDto } from "./Dto/user.Dto";
 import { JwtService } from "@nestjs/jwt";
 import * as bcrypt from "bcrypt";
 
@@ -33,7 +33,7 @@ export class AuthService {
     return bcrypt.hash(password, salt);
   }
 
-  async findUserByEmail(email: string): Promise<findUserDto> {
+  async findUserByEmail(email: string): Promise<FindUserDto> {
     return this.userModel.findOne({ email: email });
   };
 

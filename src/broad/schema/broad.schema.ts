@@ -10,8 +10,8 @@ export class Broad {
   @Prop()
   title: string;
 
-  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }] })
-  users: User[];
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: "User" })
+  users: User;
 
   @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: "List" }] })
   lists: List[];

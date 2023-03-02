@@ -5,17 +5,19 @@ import { BroadController } from "./broad.controller";
 import { BroadService } from "./broad.service";
 import { JwtAuthGuard } from "../auth/middleware/JwtAuthGuard";
 import { JwtService } from "@nestjs/jwt";
-// import { AuthService } from "src/auth/auth.service";
-
+import { AuthModule } from "../auth/auth.module";
+import { AuthService } from "../auth/auth.service";
+import { User, UserSchema } from "../auth/schema/user.schema";
 
 @Module({
-  imports: [MongooseModule.forFeature([{ name: Broad.name, schema: BroadSchema }])],
+  imports: [AuthModule,
+    MongooseModule.forFeature([{
+      name: Broad.name, schema: BroadSchema
+    }]), MongooseModule.forFeature([{
+      name: User.name, schema: UserSchema
+    }])],
   controllers: [BroadController],
-  providers: [BroadService,
-    JwtAuthGuard,
-    JwtService
-    // AuthService
-  ]
+  providers: [BroadService, JwtAuthGuard, JwtService, AuthService]
 })
 export class BroadModule {
 }

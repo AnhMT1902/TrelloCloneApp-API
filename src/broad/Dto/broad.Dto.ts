@@ -8,3 +8,11 @@ export class CreateBroadDto {
   @IsNotEmpty()
   users: User;
 }
+
+export class UpdateBroadDto {
+  @IsNotEmpty()
+  @IsString()
+  title: string;
+  @IsNotEmpty()
+  users: User;
+}

@@ -34,7 +34,7 @@ export class LoginUserDto {
   password: string;
 }
 
-export class findUserDto {
+export class FindUserDto {
   _id: ObjectId;
 
   name: string;
