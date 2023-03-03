@@ -3,7 +3,6 @@ import { Broad } from "./schema/broad.schema";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { CreateBroadDto, UpdateBroadDto } from "./Dto/broad.Dto";
-import { FindUserDto } from "../auth/Dto/user.Dto";
 
 @Injectable()
 export class BroadService {
@@ -23,12 +22,6 @@ export class BroadService {
   }
 
   async updateBroad(id: string, broad: UpdateBroadDto): Promise<any> {
-    let broadsFind = await this.BroadModel.find({ users: broad.users });
-    await broadsFind.forEach((item) => {
-      if (item.title === broad.title) {
-        throw new UnauthorizedException("Broad already exists");
-      }
-    });
     return this.BroadModel.updateOne({ _id: id }, { $set: broad });
   }
 
@@ -37,7 +30,9 @@ export class BroadService {
   }
 
   async findBroadById(idBroad: string): Promise<any> {
-    return this.BroadModel.findOne({ _id: idBroad });
+    return this.BroadModel.find().populate({path: "lists"});
   }
 
+//em bỏ populate đi thì nó ra một mảng list\
+  // thêm rồi nhé
 }

@@ -15,7 +15,7 @@ export class List {
   index_broad: number
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: "Broad" })
-  Broad_id: Broad;
+  broad: Broad;
 
   @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Card" }] })
   cards: Card[];

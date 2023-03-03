@@ -1,14 +1,11 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Req, Res } from "@nestjs/common";
 import { BroadService } from "./broad.service";
 import { CreateBroadDto, UpdateBroadDto } from "./Dto/broad.Dto";
-import { AuthService } from "../auth/auth.service";
-import { FindUserDto } from "../auth/Dto/user.Dto";
 import { Broad } from "./schema/broad.schema";
 
 @Controller("broad")
 export class BroadController {
-  constructor(private readonly broadService: BroadService,
-              private readonly authService: AuthService) {
+  constructor(private readonly broadService: BroadService) {
   }
 
   // @UseGuards(JwtAuthGuard)
@@ -28,7 +25,7 @@ export class BroadController {
   }
 
   @Get(":id")
-  async getBroad(@Req() req, @Res() res, @Param("id") id: string): Promise<Broad> {
+  async getBroad(@Res() res, @Param("id") id: string): Promise<Broad> {
     try {
       let broadFind = await this.broadService.findBroadById(id);
       return res.status(200).json(broadFind);
@@ -40,7 +37,7 @@ export class BroadController {
   }
 
   @Put(":id")
-  async updateBroad(@Req() req, @Res() res, @Param("id") id: string, @Body() broad: UpdateBroadDto): Promise<void> {
+  async updateBroad(@Res() res, @Param("id") id: string, @Body() broad: UpdateBroadDto): Promise<void> {
     try {
       await this.broadService.updateBroad(id, broad);
       res.status(200).json({
