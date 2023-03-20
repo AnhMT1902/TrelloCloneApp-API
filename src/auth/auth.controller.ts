@@ -24,12 +24,12 @@ export class AuthController {
   }
 
   @Post("login")
-  async login(@Req() req: Request, @Res() res: Response): Promise<any> {
+  async login(@Body() body, @Res() res): Promise<any> {
     try {
-      const accessToken = await this.authService.checkLogin(req.body);
+      const accessToken = await this.authService.checkLogin(body);
       return res.status(200).json(accessToken);
     } catch (error) {
-      return res.status(400).json(
+      return res.status(401).json(
         error
       );
     }

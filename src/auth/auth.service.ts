@@ -21,7 +21,7 @@ export class AuthService {
     user.name = userDto.name;
     user.password = await this.hashPassword(userDto.password, 10);
     if (await this.findUserByEmail(user.email)) {
-      throw new UnauthorizedException("Invalid email");
+      throw new UnauthorizedException("Invalid email!!!");
     }
     await this.userModel.create(user);
     const userRegister: User = await this.userModel.findOne({ email: user.email });
@@ -40,19 +40,19 @@ export class AuthService {
   async checkLogin(userLogin: LoginUserDto): Promise<any> {
     const user = await this.findUserByEmail(userLogin.email);
     if (!user) {
-      throw new UnauthorizedException("Incorrect email or password");
+      throw new UnauthorizedException("Incorrect email or password!!!");
     }
 
     const is_equal = await bcrypt.compare(userLogin.password, user.password);
 
     if (!is_equal) {
-      throw new UnauthorizedException("Incorrect email or password");
+      throw new UnauthorizedException("Incorrect email or password!!!");
     }
 
     const payload = { email: user.email, sub: user.password, name: user.name, _id: user._id.toString() };
-    // const token = await this.JwtService.sign(payload, );
     return {
-      accessToken: this.JwtService.sign(payload)
+      accessToken: this.JwtService.sign(payload),
+      user: payload
     };
   }
 }

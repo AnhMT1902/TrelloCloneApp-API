@@ -1,20 +1,19 @@
-import mongoose, { HydratedDocument } from "mongoose";
+import { Types, Document } from "mongoose";
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { User } from "../../auth/schema/user.schema";
 import { List } from "../../list/schema/list.schema";
 
-export type broadDocument = HydratedDocument<Broad>;
 
 @Schema()
-export class Broad {
+export class Broad extends Document {
   @Prop()
   title: string;
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: "User" })
-  users: User;
+  @Prop({ type: Types.ObjectId, ref: "User" })
+  users: Types.ObjectId | User;
 
-  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: "List" }] })
-  lists: List[];
+  @Prop({ type: [{ type: Types.ObjectId, ref: "List" }] })
+  lists: Types.ObjectId | List[];
 }
 
 export const BroadSchema = SchemaFactory.createForClass(Broad);
